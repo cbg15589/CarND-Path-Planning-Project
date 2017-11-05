@@ -24,7 +24,13 @@ For this purpose we read through all the telemetry data. For each vehicle, using
 
 To get in the fastest lane well ahead of encountering the vehicles, we check for traffic ahead. To do this, using the telemetry data, we check for the closest vehicle ahead on each lane. Then we predict the future distance in 5 seconds, this way even if the fastest vehicle is closer, we will be able so select the fastest path. This code is in lines 501 to 522 of main.cpp
 
-### 3.
+### 3. Speed Control
+
+In the approach I chose, for simplicity, I keep the speed and lane control apart. For the speed control, we check the closest vehicle on the current or target lane. If this vehicle is closer than 40 meters, we start decreasing the speed, if it's closer than 15 meter, we match the speed. Finally if the vehicle is closer than 10 meter, we will further reduce the speed to increase the distance. This code is in lines 524 to 594 in main.cpp
+
+### 4. Select Target Lane
+
+Based on the current lane, collision and further traffic information, we calculate the cost for all the lanes, the lane with the lowest cost is set as the target lane. 
 
    
 ### Simulator.
