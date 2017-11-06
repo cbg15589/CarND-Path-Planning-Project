@@ -438,8 +438,8 @@ int main() {
           	double car_s = j[1]["s"];
           	double car_d = j[1]["d"];
           	double car_yaw = j[1]["yaw"];
-          	double car_speed = j[1]["speed"]/2.24; // to m/s
-
+          	double car_speed = j[1]["speed"]; 
+			car_speed = car_speed / 2.24;// to m/s
 			// Car s coordinate used for collision and trafic calculations
 			double original_car_s = car_s;
 
@@ -470,6 +470,7 @@ int main() {
 			// Variables used for lane change control
 			vector<bool> laneCollision = { false, false, false };
 			vector<double> closest_car_distance = { 9999, 9999, 9999 };
+			vector<double> closest_car_distance_5s = { 9999, 9999, 9999 };
 			vector<double> closest_car_speed = { 0, 0, 0 };
 
 			// Speed and lane of the car in front.
@@ -503,19 +504,22 @@ int main() {
 				{
 					if (d <= 4) {
 						if (closest_car_distance[0] > distance) {
-							closest_car_distance[0] = distance + check_speed * 5;
+							closest_car_distance[0] = distance;
+							closest_car_distance_5s[0] = distance + check_speed * 5;
 							closest_car_speed[0] = check_speed;
 						}
 					}
 					else if (d > 4 && d <= 8) {
 						if (closest_car_distance[1] > distance) {
-							closest_car_distance[1] = distance + check_speed * 5;
+							closest_car_distance[1] = distance;
+							closest_car_distance_5s[1] = distance + check_speed * 5;
 							closest_car_speed[1] = check_speed;
 						}
 					}
 					else {
 						if (closest_car_distance[2] > distance) {
-							closest_car_distance[2] = distance + check_speed * 5;
+							closest_car_distance[2] = distance;
+							closest_car_distance_5s[2] = distance + check_speed * 5;
 							closest_car_speed[2] = check_speed;
 						}
 					}
@@ -596,10 +600,10 @@ int main() {
 			// If no previous lane change has been done, calculate costs for potential changes 
 			if (lane_changed == false)
 			{
-				vector<double> cost = cost_calc(lane, laneCollision, closest_car_distance);
+				vector<double> cost = cost_calc(lane, laneCollision, closest_car_distance_5s);
 
 				// Report status for debugging
-				cout << "Current Lane: " << currentLane << "    Target Lane: " << lane << " Collissions:  " << laneCollision[0] << "  " << laneCollision[1] << "  " << laneCollision[2] << " Distance_5sec:  " << closest_car_distance[0]<< "  " << closest_car_distance[1] << "  " << closest_car_distance[2] << " Cost:  " << cost[0] << " " << cost[1] << " " << cost[2] << endl;
+				cout << "Current Lane: " << currentLane << "    Target Lane: " << lane << " Collissions:  " << laneCollision[0] << "  " << laneCollision[1] << "  " << laneCollision[2] << " Distance:  " << closest_car_distance[0] << "  " << closest_car_distance[1] << "  " << closest_car_distance[2] << " Distance_5sec:  " << closest_car_distance_5s[0]<< "  " << closest_car_distance_5s[1] << "  " << closest_car_distance_5s[2] << " Cost:  " << cost[0] << " " << cost[1] << " " << cost[2] << endl;
 				
 				// Set target lane as the one with the lowest cost
 				int new_lane = min_element(cost.begin(), cost.end()) - cost.begin();
