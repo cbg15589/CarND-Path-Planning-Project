@@ -59,9 +59,11 @@ Overall, I'm quite satisfied with the results, achieving a personal best of 158.
 
 ![Alt Text](https://github.com/cbg15589/CarND-Path-Planning-Project/blob/master/media/Personal_Best.PNG)
 
-Even then, all the incidents I found during a 12 hour run could not really be avoided, the incidents could be classified into 3 types:
+Even then, all the incidents I found during a 12 hour run could not really be avoided without complex solutions, the incidents could be classified into 3 types:
 
 #### 1.  Traffic Vehicle suddenly dissapearing from telemetry.
+
+This could be avoided by introducing some data plausability checks, if a car suddenly disappears from the telemetry, we could at least predict a position based on previous observations.
 
 ![Alt Text](https://github.com/cbg15589/CarND-Path-Planning-Project/blob/master/media/Lost_Telemetry_Explained.PNG)
 
@@ -76,6 +78,6 @@ In this case, this incident could be avoided with emergency braking or aborting 
 This happens very rarely, but sadly this is what happened on my personal best, suddenly the path planner lost connection with the simulator and the vehicle stopped.
 
 Personal Best Video:
-[a link](https://www.youtube.com/watch?v=5M1MSSQxhYk&feature=youtu.be)
+[Link](https://www.youtube.com/watch?v=5M1MSSQxhYk&feature=youtu.be)
    
    
