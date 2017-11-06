@@ -30,7 +30,9 @@ In the approach I chose, for simplicity, I keep the speed and lane control apart
 
 ### 4. Select Target Lane
 
-Based on the current lane, collision and further traffic information, we calculate the cost for all the lanes, the lane with the lowest cost is set as the target lane. 
+Based on the current lane, collision and further traffic information, we calculate the cost for all the lanes, the lane with the lowest cost is set as the target lane. Basically we want to avoid all collisions, then we prioritize the lane with no traffic or the fastest traffic. While being on the side lanes, in case of a double lane change, we take into acoount collisions with the central lane. This way of selecting the target lane is quite simple, easy to understand, and effective.
+
+Below some examples of the car behaviour can be found.
 
    
 ### Simulator.
