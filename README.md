@@ -37,16 +37,39 @@ Additionally I implemeted a counter to avoid too many lane changes, the vehicle 
 Below some examples of the car behaviour can be found.
 
 
-In the firts example we can see how the vehicle handles low traffic quite well, changing lane far before encountering the vehicles.
+In the first example we can see how the vehicle handles low traffic quite well, changing lane far before encountering the vehicles.
+
 ![Alt Text](https://github.com/cbg15589/CarND-Path-Planning-Project/blob/master/media/Low%20Traffic_fast.gif)
 
 In the second example we see a heavier traffic situation, where the vehicle waits matching the front vehicle's speed until there is a safe window to overtake.
+
 ![Alt Text](https://github.com/cbg15589/CarND-Path-Planning-Project/blob/master/media/Low%20Traffic_2_fast.gif)
 
 In the last example we can see a similar example, but this time after starting the overtake it doubts and goes back to lane 2. This is due to the car on lane 1 constantly braking and accelerating. This could be improved, but at least the overtake is done in a safe manner.
+
 ![Alt Text](https://github.com/cbg15589/CarND-Path-Planning-Project/blob/master/media/Heavy%20Traffic_fast.gif)
 
 ### 5. Trajectory Generation
+   Finally, once we know on wich lane we want to drive, it's time to generate the trajectory. Here I mainly used the project's walkthrough code with a minor tweak. Here we use the last point of the previous path and some of the highway waypoints further ahead to fit a spline. From the starting code, I had to dinamically adapt the distance between the waypoints based on the desired speed, without this, at low speeds, the vehicle didn't follow the center of the lane accurately.
+   
+The vehicle in the simulator travels to the next point every 0.02 so we need to split the spline into points with the required distance between them so that we achieved the demand speed. Then we add this points to the previous path and send the first 50 point to the simulator, using the previous path helps us to achieve smooth transitions.
+
+## Conclusion
+
+Overall, I'm quite satisfied with the results, achieving a personal best of 158.51 miles in 3:18:41 without any incident. This averages a speed of 47.87 mph, only two miles below the highway maximum speed. Even then, all the incidents I found during a 12 hour run could not really be avoided, the incidents could be classified into 3 types:
+
+#### 1.  Traffic Vehicle suddenly dissapearing from telemetry.
+
+![Alt Text](https://github.com/cbg15589/CarND-Path-Planning-Project/blob/master/media/Lost_Telemetry_Explained.PNG)
+
+#### 2. Another vehicle changing to the same lane.
+
+In this case, this incident could be avoided with emergency braking or aborting the lane change, either of those would result into an incident anyway.
+
+![Alt Text](https://github.com/cbg15589/CarND-Path-Planning-Project/blob/master/media/Collision.gif)
+
+
+   
    
 ### Simulator.
 You can download the Term3 Simulator which contains the Path Planning Project from the [releases tab (https://github.com/udacity/self-driving-car-sim/releases).
