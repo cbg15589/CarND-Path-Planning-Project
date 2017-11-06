@@ -30,14 +30,23 @@ In the approach I chose, for simplicity, I keep the speed and lane control apart
 
 ### 4. Select Target Lane
 
-Based on the current lane, collision and further traffic information, we calculate the cost for all the lanes, the lane with the lowest cost is set as the target lane. Basically we want to avoid all collisions, then we prioritize the lane with no traffic or the fastest traffic. While being on the side lanes, in case of a double lane change, we take into acoount collisions with the central lane. This way of selecting the target lane is quite simple, easy to understand, and effective.
+Based on the current lane, collision and further traffic information, we calculate the cost for all the lanes, the lane with the lowest cost is set as the target lane. Basically we want to avoid all collisions, then we prioritize the lane with no traffic or the fastest traffic. While being on the side lanes, in case of a double lane change, we take into acoount collisions with the central lane.
+
+Additionally I implemeted a counter to avoid too many lane changes, the vehicle is allowed to perform a lane change every four seconds. Also double lane changes are not allowed, these are made in two steps. Overall, this way of selecting the target lane is quite simple, easy to understand, and effective.
 
 Below some examples of the car behaviour can be found.
 
+
+In the firts example we can see how the vehicle handles low traffic quite well, changing lane far before encountering the vehicles.
 ![Alt Text](https://github.com/cbg15589/CarND-Path-Planning-Project/blob/master/media/Low%20Traffic_fast.gif)
+
+In the second example we see a heavier traffic situation, where the vehicle waits matching the front vehicle's speed until there is a safe window to overtake.
 ![Alt Text](https://github.com/cbg15589/CarND-Path-Planning-Project/blob/master/media/Low%20Traffic_2_fast.gif)
+
+In the last example we can see a similar example, but this time after starting the overtake it doubts and goes back to lane 2. This is due to the car on lane 1 constantly braking and accelerating. This could be improved, but at least the overtake is done in a safe manner.
 ![Alt Text](https://github.com/cbg15589/CarND-Path-Planning-Project/blob/master/media/Heavy%20Traffic_fast.gif)
 
+### 5. Trajectory Generation
    
 ### Simulator.
 You can download the Term3 Simulator which contains the Path Planning Project from the [releases tab (https://github.com/udacity/self-driving-car-sim/releases).
