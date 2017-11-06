@@ -1,5 +1,39 @@
 # CarND-Path-Planning-Project
 Self-Driving Car Engineer Nanodegree Program
+
+## Introduction
+The goal of this projecto is to drive a car in highway scenario. In this project we interact with a simulator that includes our own vehicle, the highway and some traffic. The simulator provide us with telemetry data of all the vehicles and the highway waypoints.
+During the driving we must comply with some requirements: 
+
+1. The vehicle must drive at least 4.32 miles without incident.
+2. The maximum speed must not be exceeded.
+3. The macimum acceleration and jerk must not be exceeded.
+4. The vehicle must not collide with other vehicles.
+5. The vehicle must be able to change lane.
+6. The vehicle must stay on it's lane.
+
+## Implementation
+
+To achieve the goal of this project, using the provided waypoints and the telemetry data, I follow this steps:
+
+### 1. Check for possible collisions
+
+For this purpose we read through all the telemetry data. For each vehicle, using the current position and speed, we predict it's future position in the next two seconds. Then if at any intermediate steps the vehicles are closer than a threshold, a collision flag is raised. As a result we get a vector that tell us if there is a potential on each lane. The method to check for collisions is checkCollision and can be found on line 289 of main.cpp.
+
+### 2. Check for further traffic
+
+To get in the fastest lane well ahead of encountering the vehicles, we check for traffic ahead. To do this, using the telemetry data, we check for the closest vehicle ahead on each lane. Then we predict the future distance in 5 seconds, this way even if the fastest vehicle is closer, we will be able so select the fastest path. This code is in lines 501 to 522 of main.cpp
+
+### 3. Speed Control
+
+In the approach I chose, for simplicity, I keep the speed and lane control apart. For the speed control, we check the closest vehicle on the current or target lane. If this vehicle is closer than 40 meters, we start decreasing the speed, if it's closer than 15 meter, we match the speed. Finally if the vehicle is closer than 10 meter, we will further reduce the speed to increase the distance. This code is in lines 524 to 594 in main.cpp
+
+### 4. Select Target Lane
+
+Based on the current lane, collision and further traffic information, we calculate the cost for all the lanes, the lane with the lowest cost is set as the target lane. Basically we want to avoid all collisions, then we prioritize the lane with no traffic or the fastest traffic. While being on the side lanes, in case of a double lane change, we take into acoount collisions with the central lane. This way of selecting the target lane is quite simple, easy to understand, and effective.
+
+Below some examples of the car behaviour can be found.
+
    
 ### Simulator.
 You can download the Term3 Simulator which contains the Path Planning Project from the [releases tab (https://github.com/udacity/self-driving-car-sim/releases).
