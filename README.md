@@ -34,6 +34,10 @@ Based on the current lane, collision and further traffic information, we calcula
 
 Below some examples of the car behaviour can be found.
 
+![Alt Text](https://github.com/cbg15589/CarND-Path-Planning-Project/blob/master/media/Low%20Traffic_fast.gif)
+![Alt Text](https://github.com/cbg15589/CarND-Path-Planning-Project/blob/master/media/Low%20Traffic_2_fast.gif)
+![Alt Text](https://github.com/cbg15589/CarND-Path-Planning-Project/blob/master/media/Heavy%20Traffic_fast.gif)
+
    
 ### Simulator.
 You can download the Term3 Simulator which contains the Path Planning Project from the [releases tab (https://github.com/udacity/self-driving-car-sim/releases).
