@@ -2,15 +2,15 @@
 Self-Driving Car Engineer Nanodegree Program
 
 ## Introduction
-The goal of this projecto is to drive a car in highway scenario. In this project we interact with a simulator that includes our own vehicle, the highway and some traffic. The simulator provide us with telemetry data of all the vehicles and the highway waypoints.
+The goal of this project is to drive a car in a highway scenario. In this project we interact with a simulator that includes our own vehicle, the highway and some traffic. The simulator provides us with telemetry data of all the vehicles and the highway waypoints.
 During the driving we must comply with some requirements: 
 
 1. The vehicle must drive at least 4.32 miles without incident.
 2. The maximum speed must not be exceeded.
-3. The macimum acceleration and jerk must not be exceeded.
+3. The maximum acceleration and jerk must not be exceeded.
 4. The vehicle must not collide with other vehicles.
 5. The vehicle must be able to change lane.
-6. The vehicle must stay on it's lane.
+6. The vehicle must stay on its lane.
 
 ## Implementation
 
@@ -18,24 +18,23 @@ To achieve the goal of this project, using the provided waypoints and the teleme
 
 ### 1. Check for possible collisions
 
-For this purpose we read through all the telemetry data. For each vehicle, using the current position and speed, we predict it's future position in the next two seconds. Then if at any intermediate steps the vehicles are closer than a threshold, a collision flag is raised. As a result we get a vector that tell us if there is a potential on each lane. The method to check for collisions is checkCollision and can be found on line 289 of main.cpp.
+For this purpose, we read through all the telemetry data. For each vehicle, using the current position and speed, we predict its future position in the next two seconds. Then if at any intermediate steps the vehicles are closer than a threshold, a collision flag is raised. As a result, we get a vector that tell us if there is a potential collision on each lane. The method to check for collisions is checkCollision and can be found on line 289 of main.cpp.
 
 ### 2. Check for further traffic
 
-To get in the fastest lane well ahead of encountering the vehicles, we check for traffic ahead. To do this, using the telemetry data, we check for the closest vehicle ahead on each lane. Then we predict the future distance in 5 seconds, this way even if the fastest vehicle is closer, we will be able so select the fastest path. This code is in lines 501 to 522 of main.cpp
+To get in the fastest lane well ahead of encountering the vehicles, we check for traffic ahead. To do this, using the telemetry data, we check for the closest vehicle ahead on each lane. Then we predict the future distance in 5 seconds, this way even if the fastest vehicle is closer, we will be able to select the fastest path. This code is in lines 501 to 522 of main.cpp
 
 ### 3. Speed Control
 
-In the approach I chose, for simplicity, I keep the speed and lane control apart. For the speed control, we check the closest vehicle on the current or target lane. If this vehicle is closer than 40 meters, we start decreasing the speed, if it's closer than 15 meter, we match the speed. Finally if the vehicle is closer than 10 meter, we will further reduce the speed to increase the distance. This code is in lines 524 to 594 in main.cpp
+In the approach I chose, for simplicity, I keep the speed and lane control apart. For the speed control, we check the closest vehicle on the current or target lane. If this vehicle is closer than 40 meters, we start decreasing the speed, if it's closer than 15 meter, we match the speed. Finally, if the vehicle is closer than 10 meter, we will further reduce the speed to increase the distance. This code is in lines 524 to 594 in main.cpp
 
 ### 4. Select Target Lane
 
-Based on the current lane, collision and further traffic information, we calculate the cost for all the lanes, the lane with the lowest cost is set as the target lane. Basically we want to avoid all collisions, then we prioritize the lane with no traffic or the fastest traffic. While being on the side lanes, in case of a double lane change, we take into acoount collisions with the central lane.
+Based on the current lane, collision and further traffic information, we calculate the cost for all the lanes, the lane with the lowest cost is set as the target lane. Basically we want to avoid all collisions, then we prioritize the lane with no traffic or the fastest traffic. While being on the side lanes, in case of a double lane change, we take into account collisions with the central lane.
 
-Additionally I implemeted a counter to avoid too many lane changes, the vehicle is allowed to perform a lane change every four seconds. Also double lane changes are not allowed, these are made in two steps. Overall, this way of selecting the target lane is quite simple, easy to understand, and effective.
+Additionally, I implemented a counter to avoid too many lane changes, the vehicle is allowed to perform a lane change every four seconds. Also double lane changes are not allowed, these are made in two steps. Overall, this way of selecting the target lane is quite simple, easy to understand, and effective.
 
 Below some examples of the car behaviour can be found.
-
 
 In the first example we can see how the vehicle handles low traffic quite well, changing lane far before encountering the vehicles.
 
@@ -50,13 +49,17 @@ In the last example we can see a similar example, but this time after starting t
 ![Alt Text](https://github.com/cbg15589/CarND-Path-Planning-Project/blob/master/media/Heavy%20Traffic_fast.gif)
 
 ### 5. Trajectory Generation
-   Finally, once we know on wich lane we want to drive, it's time to generate the trajectory. Here I mainly used the project's walkthrough code with a minor tweak. Here we use the last point of the previous path and some of the highway waypoints further ahead to fit a spline. From the starting code, I had to dinamically adapt the distance between the waypoints based on the desired speed, without this, at low speeds, the vehicle didn't follow the center of the lane accurately.
+   Finally, once we know on which lane we want to drive, it's time to generate the trajectory. Here I mainly used the project's walkthrough code with a minor tweak. Here we use the last point of the previous path and some of the highway waypoints further ahead to fit a spline. Based on the starting code, I had to dynamically adapt the distance between the waypoints based on the desired speed, without this, at low speeds, the vehicle didn't follow the center of the lane accurately.
    
 The vehicle in the simulator travels to the next point every 0.02 so we need to split the spline into points with the required distance between them so that we achieved the demand speed. Then we add this points to the previous path and send the first 50 point to the simulator, using the previous path helps us to achieve smooth transitions.
 
 ## Conclusion
 
-Overall, I'm quite satisfied with the results, achieving a personal best of 158.51 miles in 3:18:41 without any incident. This averages a speed of 47.87 mph, only two miles below the highway maximum speed. Even then, all the incidents I found during a 12 hour run could not really be avoided, the incidents could be classified into 3 types:
+Overall, I'm quite satisfied with the results, achieving a personal best of 158.51 miles in 3:18:41 without any incident. This averages a speed of 47.87 mph, only two miles below the highway maximum speed.
+
+![Alt Text](https://github.com/cbg15589/CarND-Path-Planning-Project/blob/master/media/Personal_Best.PNG)
+
+Even then, all the incidents I found during a 12 hour run could not really be avoided, the incidents could be classified into 3 types:
 
 #### 1.  Traffic Vehicle suddenly dissapearing from telemetry.
 
@@ -68,143 +71,11 @@ In this case, this incident could be avoided with emergency braking or aborting 
 
 ![Alt Text](https://github.com/cbg15589/CarND-Path-Planning-Project/blob/master/media/Collision.gif)
 
+#### 3. Lost connection with the simulator 
 
+This happens very rarely, but sadly this is what happened on my personal best, suddenly the path planner lost connection with the simulator and the vehicle stopped.
+
+Personal Best Video:
+[a link](https://www.youtube.com/watch?v=5M1MSSQxhYk&feature=youtu.be)
    
    
-### Simulator.
-You can download the Term3 Simulator which contains the Path Planning Project from the [releases tab (https://github.com/udacity/self-driving-car-sim/releases).
-
-### Goals
-In this project your goal is to safely navigate around a virtual highway with other traffic that is driving +-10 MPH of the 50 MPH speed limit. You will be provided the car's localization and sensor fusion data, there is also a sparse map list of waypoints around the highway. The car should try to go as close as possible to the 50 MPH speed limit, which means passing slower traffic when possible, note that other cars will try to change lanes too. The car should avoid hitting other cars at all cost as well as driving inside of the marked road lanes at all times, unless going from one lane to another. The car should be able to make one complete loop around the 6946m highway. Since the car is trying to go 50 MPH, it should take a little over 5 minutes to complete 1 loop. Also the car should not experience total acceleration over 10 m/s^2 and jerk that is greater than 50 m/s^3.
-
-#### The map of the highway is in data/highway_map.txt
-Each waypoint in the list contains  [x,y,s,dx,dy] values. x and y are the waypoint's map coordinate position, the s value is the distance along the road to get to that waypoint in meters, the dx and dy values define the unit normal vector pointing outward of the highway loop.
-
-The highway's waypoints loop around so the frenet s value, distance along the road, goes from 0 to 6945.554.
-
-## Basic Build Instructions
-
-1. Clone this repo.
-2. Make a build directory: `mkdir build && cd build`
-3. Compile: `cmake .. && make`
-4. Run it: `./path_planning`.
-
-Here is the data provided from the Simulator to the C++ Program
-
-#### Main car's localization Data (No Noise)
-
-["x"] The car's x position in map coordinates
-
-["y"] The car's y position in map coordinates
-
-["s"] The car's s position in frenet coordinates
-
-["d"] The car's d position in frenet coordinates
-
-["yaw"] The car's yaw angle in the map
-
-["speed"] The car's speed in MPH
-
-#### Previous path data given to the Planner
-
-//Note: Return the previous list but with processed points removed, can be a nice tool to show how far along
-the path has processed since last time. 
-
-["previous_path_x"] The previous list of x points previously given to the simulator
-
-["previous_path_y"] The previous list of y points previously given to the simulator
-
-#### Previous path's end s and d values 
-
-["end_path_s"] The previous list's last point's frenet s value
-
-["end_path_d"] The previous list's last point's frenet d value
-
-#### Sensor Fusion Data, a list of all other car's attributes on the same side of the road. (No Noise)
-
-["sensor_fusion"] A 2d vector of cars and then that car's [car's unique ID, car's x position in map coordinates, car's y position in map coordinates, car's x velocity in m/s, car's y velocity in m/s, car's s position in frenet coordinates, car's d position in frenet coordinates. 
-
-## Details
-
-1. The car uses a perfect controller and will visit every (x,y) point it recieves in the list every .02 seconds. The units for the (x,y) points are in meters and the spacing of the points determines the speed of the car. The vector going from a point to the next point in the list dictates the angle of the car. Acceleration both in the tangential and normal directions is measured along with the jerk, the rate of change of total Acceleration. The (x,y) point paths that the planner recieves should not have a total acceleration that goes over 10 m/s^2, also the jerk should not go over 50 m/s^3. (NOTE: As this is BETA, these requirements might change. Also currently jerk is over a .02 second interval, it would probably be better to average total acceleration over 1 second and measure jerk from that.
-
-2. There will be some latency between the simulator running and the path planner returning a path, with optimized code usually its not very long maybe just 1-3 time steps. During this delay the simulator will continue using points that it was last given, because of this its a good idea to store the last points you have used so you can have a smooth transition. previous_path_x, and previous_path_y can be helpful for this transition since they show the last points given to the simulator controller with the processed points already removed. You would either return a path that extends this previous path or make sure to create a new path that has a smooth transition with this last path.
-
-## Tips
-
-A really helpful resource for doing this project and creating smooth trajectories was using http://kluge.in-chemnitz.de/opensource/spline/, the spline function is in a single hearder file is really easy to use.
-
----
-
-## Dependencies
-
-* cmake >= 3.5
- * All OSes: [click here for installation instructions](https://cmake.org/install/)
-* make >= 4.1
-  * Linux: make is installed by default on most Linux distros
-  * Mac: [install Xcode command line tools to get make](https://developer.apple.com/xcode/features/)
-  * Windows: [Click here for installation instructions](http://gnuwin32.sourceforge.net/packages/make.htm)
-* gcc/g++ >= 5.4
-  * Linux: gcc / g++ is installed by default on most Linux distros
-  * Mac: same deal as make - [install Xcode command line tools]((https://developer.apple.com/xcode/features/)
-  * Windows: recommend using [MinGW](http://www.mingw.org/)
-* [uWebSockets](https://github.com/uWebSockets/uWebSockets)
-  * Run either `install-mac.sh` or `install-ubuntu.sh`.
-  * If you install from source, checkout to commit `e94b6e1`, i.e.
-    ```
-    git clone https://github.com/uWebSockets/uWebSockets 
-    cd uWebSockets
-    git checkout e94b6e1
-    ```
-
-## Editor Settings
-
-We've purposefully kept editor configuration files out of this repo in order to
-keep it as simple and environment agnostic as possible. However, we recommend
-using the following settings:
-
-* indent using spaces
-* set tab width to 2 spaces (keeps the matrices in source code aligned)
-
-## Code Style
-
-Please (do your best to) stick to [Google's C++ style guide](https://google.github.io/styleguide/cppguide.html).
-
-## Project Instructions and Rubric
-
-Note: regardless of the changes you make, your project must be buildable using
-cmake and make!
-
-
-## Call for IDE Profiles Pull Requests
-
-Help your fellow students!
-
-We decided to create Makefiles with cmake to keep this project as platform
-agnostic as possible. Similarly, we omitted IDE profiles in order to ensure
-that students don't feel pressured to use one IDE or another.
-
-However! I'd love to help people get up and running with their IDEs of choice.
-If you've created a profile for an IDE that you think other students would
-appreciate, we'd love to have you add the requisite profile files and
-instructions to ide_profiles/. For example if you wanted to add a VS Code
-profile, you'd add:
-
-* /ide_profiles/vscode/.vscode
-* /ide_profiles/vscode/README.md
-
-The README should explain what the profile does, how to take advantage of it,
-and how to install it.
-
-Frankly, I've never been involved in a project with multiple IDE profiles
-before. I believe the best way to handle this would be to keep them out of the
-repo root to avoid clutter. My expectation is that most profiles will include
-instructions to copy files to a new location to get picked up by the IDE, but
-that's just a guess.
-
-One last note here: regardless of the IDE used, every submitted project must
-still be compilable with cmake and make./
-
-## How to write a README
-A well written README file can enhance your project and portfolio.  Develop your abilities to create professional README files by completing [this free course](https://www.udacity.com/course/writing-readmes--ud777).
-
