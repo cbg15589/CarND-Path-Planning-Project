@@ -298,7 +298,7 @@ bool checkCollision(double s1, double s2, double v1, double v2) {
 		double s2_next = s2 + v2*time_gap*(a/100);
 		// If the distance between vehicles is smaller that 5 at time = 0,
 		// or 15 at time = 2. A possible collision is flaged
-		if (abs(s1_next - s2_next) < (20 + 10*(a/100)))
+		if (abs(s1_next - s2_next) < (5 + 10*(a/100)))
 		{
 			collision = true;
 		}
